@@ -392,7 +392,7 @@ impl ErosionMap {
     }
 
     fn cache_path(seed: u64, n: usize) -> PathBuf {
-        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        crate::game_dir()
             .join("cache")
             .join(format!("erosion_{seed}_{n}_v{CACHE_VERSION}.bin"))
     }
@@ -631,7 +631,7 @@ mod map_image {
                 }
             }
         }
-        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("shots/erosion_map.ppm");
+        let path = crate::game_dir().join("shots/erosion_map.ppm");
         let mut out = format!("P6\n{} {}\n255\n", w * 3, h).into_bytes();
         out.extend_from_slice(&img);
         std::fs::write(&path, out).unwrap();

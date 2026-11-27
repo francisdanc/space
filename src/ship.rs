@@ -25,7 +25,6 @@ use crate::player::{ControlMode, HALF_HEIGHT, InShip, Player, basis, tangent};
 
 /// Ship model built by tools/blender/ship.py.
 const SHIP_MODEL: &str = "models/ship.glb";
-const SHIP_MODEL_FILE: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/assets/models/ship.glb");
 
 /// Distance from the ship's origin down to the bottom of the landing pads.
 pub const LEG_HEIGHT: f64 = 3.0;
@@ -283,7 +282,7 @@ pub fn spawn_ship(
         ))
         .with_children(|c| {
             // The Blender model (tools/blender/ship.py) if it has been built, else plain boxes.
-            if std::path::Path::new(SHIP_MODEL_FILE).exists() {
+            if crate::game_dir().join("assets").join(SHIP_MODEL).exists() {
                 c.spawn(SceneRoot(assets.load(GltfAssetLabel::Scene(0).from_asset(SHIP_MODEL))));
             } else {
                 c.spawn((

@@ -12,7 +12,6 @@ use crate::camera::CameraWorld;
 use crate::player::{ControlMode, HALF_HEIGHT, InShip, Player};
 
 const MODEL: &str = "models/astronaut.glb";
-const MODEL_FILE: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/assets/models/astronaut.glb");
 /// Animation clips in the model, in the order of `BodyAnimations::nodes`.
 const CLIPS: [&str; 3] = ["Idle", "Walk", "Run"];
 /// Ground speed (m/s) at which the Walk and Run clips play at normal speed.
@@ -43,8 +42,9 @@ struct BodyAnimations {
 struct CurrentClip(usize);
 
 fn spawn_body(mut commands: Commands, assets: Res<AssetServer>) {
-    if !std::path::Path::new(MODEL_FILE).exists() {
-        warn!("{MODEL_FILE} not found; run tools/blender/astronaut.py to build the player body");
+    let model_file = crate::game_dir().join("assets").join(MODEL);
+    if !model_file.exists() {
+        warn!("{} not found; run tools/blender/astronaut.py to build the player body", model_file.display());
         return;
     }
     commands.insert_resource(BodyAnimations { gltf: assets.load(MODEL), graph: None, nodes: Vec::new() });

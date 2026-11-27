@@ -51,7 +51,7 @@ pub struct ShipSave {
 }
 
 pub fn path() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("saves").join("save.json")
+    crate::game_dir().join("saves").join("save.json")
 }
 
 /// Saving and loading are off in test runs.

@@ -409,7 +409,8 @@ fn array_image(layers: Vec<Vec<u8>>, w: usize, h: usize, format: TextureFormat, 
 /// Bake every species' impostor (one thread per species). Returns (albedo, normal) arrays.
 pub fn bake(ctx: &FloraContext, images: &mut Assets<Image>) -> (Handle<Image>, Handle<Image>) {
     let start = std::time::Instant::now();
-    let dir = concat!(env!("CARGO_MANIFEST_DIR"), "/assets/textures");
+    let dir = crate::game_dir().join("assets/textures");
+    let dir = dir.display();
     let bark = Tex::load(&format!("{dir}/flora_albedo.png"), crate::textures::flora_layer::COUNT as usize, 64);
     let leaves = Tex::load(&format!("{dir}/foliage_albedo.png"), 1, 512);
     let jobs: Vec<(&Template, ImpostorInfo)> = ctx

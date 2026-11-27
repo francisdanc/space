@@ -35,6 +35,17 @@ use bevy::transform::TransformSystem;
 
 use camera::CameraWorld;
 
+/// Where the game's assets, cache and saves live: next to the executable when it ships with an
+/// `assets` folder (a release zip), otherwise the source checkout it was built from.
+pub fn game_dir() -> std::path::PathBuf {
+    if let Some(dir) = std::env::current_exe().ok().and_then(|e| e.parent().map(|p| p.to_path_buf())) {
+        if dir.join("assets").is_dir() {
+            return dir;
+        }
+    }
+    std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+}
+
 fn main() {
     // `space --dump-ship-parts file.json` writes the ship's parts for the Blender script.
     let args: Vec<String> = std::env::args().collect();
@@ -72,7 +83,7 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(AssetPlugin {
             // Absolute path so the game finds its models however it is launched.
-            file_path: concat!(env!("CARGO_MANIFEST_DIR"), "/assets").to_string(),
+            file_path: game_dir().join("assets").to_string_lossy().into_owned(),
             ..default()
         }).set(WindowPlugin {
             primary_window: Some(Window {

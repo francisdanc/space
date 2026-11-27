@@ -64,7 +64,6 @@ enum Kind {
     Linear,
 }
 
-const DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/assets/textures");
 
 pub fn load_textures(mut commands: Commands, mut images: ResMut<Assets<Image>>) {
     let start = std::time::Instant::now();
@@ -148,7 +147,7 @@ fn coverage(img: &[u8], scale: f32) -> f32 {
 }
 
 fn build_image(name: &str, layers: u32, kind: Kind) -> Image {
-    let path = format!("{DIR}/{name}.png");
+    let path = format!("{}/{name}.png", crate::game_dir().join("assets/textures").display());
     let img = image::open(&path).unwrap_or_else(|e| panic!("{path}: {e} (run tools/textures/build_textures.py)")).to_rgba8();
     let w = img.width() as usize;
     let layer_h = img.height() as usize / layers as usize;
